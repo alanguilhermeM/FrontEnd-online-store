@@ -11,3 +11,4 @@ export default class Cart extends Component {
     );
   }
 }
+// requisito 3
