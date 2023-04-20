@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 class Search extends Component {
@@ -8,6 +8,8 @@ class Search extends Component {
     categorieSearch: '',
     categories: [],
     resultSearch: [],
+    clickIdProduct: '',
+    redirect: false,
   };
 
   componentDidMount() {
@@ -45,9 +47,22 @@ class Search extends Component {
     this.handleClick();
   };
 
-  render() {
-    const { inputSearch, categorieSearch, categories, resultSearch } = this.state;
+  handleClickProductCard = (event) => {
+    event.preventDefault();
+    const { id } = event.target;
 
+    this.setState({
+      clickIdProduct: id,
+      redirect: true,
+    });
+  };
+
+  render() {
+    const {
+      inputSearch, categorieSearch, categories, resultSearch, clickIdProduct, redirect,
+    } = this.state;
+
+    if (redirect) return <Redirect to={ `/${clickIdProduct}` } />;
     return (
       <>
         <input
@@ -72,31 +87,38 @@ class Search extends Component {
           : '' }
 
         <section>
-          <ul>
-            {
-              categories.map((categorie) => (
-                <li
-                  key={ categorie.id }
+          {
+            categories.map((categorie) => (
+              <div
+                key={ categorie.id }
+              >
+                <button
+                  onClick={ this.handleClickCategorie }
+                  id={ categorie.id }
+                  value={ categorieSearch }
+                  data-testid="category"
                 >
-                  <button
-                    onClick={ this.handleClickCategorie }
-                    id={ categorie.id }
-                    value={ categorieSearch }
-                    data-testid="category"
-                  >
-                    {categorie.name}
-                  </button>
-                </li>))
-            }
-          </ul>
+                  {categorie.name}
+                </button>
+              </div>))
+          }
         </section>
         <main>
           {resultSearch.length === 0 ? <p>Nenhum produto foi encontrado</p> : (
             resultSearch.map((result) => (
-              <div key={ result.id } data-testid="product">
-                <h3>{ result.title }</h3>
-                <img src={ result.thumbnail } alt="imagem do produto" />
-                <span>{ result.price }</span>
+              <div
+                key={ result.id }
+                data-testid="product"
+              >
+                <button
+                  id={ result.id }
+                  onClick={ this.handleClickProductCard }
+                  data-testid="product-detail-link"
+                >
+                  <h3>{ result.title }</h3>
+                  <img src={ result.thumbnail } alt="imagem do produto" />
+                  <span>{ result.price }</span>
+                </button>
               </div>
             )))}
         </main>
