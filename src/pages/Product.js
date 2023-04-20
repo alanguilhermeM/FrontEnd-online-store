@@ -29,9 +29,25 @@ class Product extends Component {
     });
   };
 
+  addProduct = (event) => {
+    event.preventDefault();
+    const { match } = this.props;
+    const { params: { id } } = match;
+    const { name, image, price } = this.state;
+    const produto = [{ name, image, price, id }];
+    if (localStorage.getItem('Produto')) {
+      const itemOnLocal = JSON.parse(localStorage.getItem('Produto'));
+      localStorage.removeItem('Produto');
+      const newProduct = produto[0];
+      itemOnLocal.push(newProduct);
+      localStorage.setItem('Produto', JSON.stringify(itemOnLocal));
+    } else {
+      localStorage.setItem('Produto', JSON.stringify(produto));
+    }
+  };
+
   render() {
     const { loading, name, image, price } = this.state;
-
     return (
       <div>
         { loading ? <Loading /> : (
@@ -43,7 +59,15 @@ class Product extends Component {
               alt="Imagem do produto"
             />
             <span data-testid="product-detail-price">{price}</span>
+            <br />
             <Link data-testid="shopping-cart-button" to="/cart">Carrinho</Link>
+            <button
+              data-testid="product-detail-add-to-cart"
+              onClick={ this.addProduct }
+            >
+              Adicione ao Carrinho
+
+            </button>
           </main>
         ) }
       </div>
