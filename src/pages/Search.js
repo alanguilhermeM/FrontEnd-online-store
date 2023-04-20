@@ -5,6 +5,7 @@ import { getCategories, getProductsFromCategoryAndQuery } from '../services/api'
 class Search extends Component {
   state = {
     inputSearch: '',
+    categorieSearch: '',
     categories: [],
     resultSearch: [],
   };
@@ -21,31 +22,39 @@ class Search extends Component {
   };
 
   handleClick = async () => {
-    const { inputSearch } = this.state;
-    const search = await getProductsFromCategoryAndQuery(inputSearch);
-    console.log(inputSearch);
+    const { inputSearch, categorieSearch } = this.state;
+    const search = await getProductsFromCategoryAndQuery(inputSearch, categorieSearch);
     this.setState({
       resultSearch: search.results,
     });
   };
 
-  handleInputChange = (event) => {
+  handleChange = (event) => {
     const { value, name } = event.target;
+
     this.setState({
       [name]: value,
     });
   };
 
+  handleClickCategorie = async (event) => {
+    const { id } = event.target;
+    this.setState({
+      categorieSearch: id,
+    });
+    this.handleClick();
+  };
+
   render() {
-    const { inputSearch, categories, resultSearch } = this.state;
-    console.log(resultSearch);
+    const { inputSearch, categorieSearch, categories, resultSearch } = this.state;
+
     return (
       <>
         <input
           type="text"
           name="inputSearch"
           data-testid="query-input"
-          onChange={ this.handleInputChange }
+          onChange={ this.handleChange }
         />
         <button
           data-testid="query-button"
@@ -67,10 +76,16 @@ class Search extends Component {
             {
               categories.map((categorie) => (
                 <li
-                  data-testid="category"
                   key={ categorie.id }
                 >
-                  <button>{categorie.name}</button>
+                  <button
+                    onClick={ this.handleClickCategorie }
+                    id={ categorie.id }
+                    value={ categorieSearch }
+                    data-testid="category"
+                  >
+                    {categorie.name}
+                  </button>
                 </li>))
             }
           </ul>
@@ -91,4 +106,3 @@ class Search extends Component {
 }
 
 export default Search;
-// requisito 3
