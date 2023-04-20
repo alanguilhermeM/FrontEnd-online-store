@@ -20,7 +20,14 @@ export async function getProductsFromCategoryAndQuery(inputSearch, categorieSear
   }
 }
 
-export async function getProductById() {
+export async function getProductById(id) {
   // Esta implementação específica não é avaliada, mas pode ajudar você 🙂
   // Atenção: essa função não deverá ser chamada na tela do carrinho de compras.
+  try {
+    const api = await fetch(`https://api.mercadolibre.com/items/${id}`);
+    const query = await api.json();
+    return query;
+  } catch (error) {
+    console.log(error);
+  }
 }
