@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CartCounter from '../components/CartCounter';
 
 export default class Cart extends Component {
   state = {
@@ -12,9 +13,19 @@ export default class Cart extends Component {
         produtos: product,
       }));
     }
-    // const { produtos } = this.state;
-    // console.log(produtos);
   }
+
+  removeProduct = (itemID) => {
+    const { produtos } = this.state;
+    const indexProduct = produtos
+      .findIndex((e) => e.id === itemID);
+
+    produtos.splice(indexProduct, 1);
+    const updatedProducts = [...produtos];
+    this.setState({ produtos: updatedProducts });
+    localStorage.removeItem('Produto');
+    localStorage.setItem('Produto', JSON.stringify(updatedProducts));
+  };
 
   render() {
     const { produtos } = this.state;
@@ -26,15 +37,15 @@ export default class Cart extends Component {
         {produtos.length > 0 ? (
           <>
             {produtos.map((produto) => (
-              <div key={ Math.random() }>
+              <div key={ produto.id }>
                 <h3 data-testid="shopping-cart-product-name">{produto.name}</h3>
                 <img src={ produto.image } alt="Imagem" />
                 <span>{produto.price}</span>
-                <p data-testid="shopping-cart-product-quantity">
-                  {
-                    produtos.filter((product) => product.id === produto.id).length
-                  }
-                </p>
+                <CartCounter
+                  itemID={ produto.id }
+                  itemPrice={ produto.price }
+                  removeProduct={ this.removeProduct }
+                />
               </div>
             ))}
           </>

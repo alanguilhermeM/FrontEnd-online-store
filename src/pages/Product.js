@@ -10,6 +10,7 @@ class Product extends Component {
     name: '',
     image: '',
     price: 0,
+    quantity: 1,
   };
 
   async componentDidMount() {
@@ -33,8 +34,8 @@ class Product extends Component {
     event.preventDefault();
     const { match } = this.props;
     const { params: { id } } = match;
-    const { name, image, price } = this.state;
-    const produto = [{ name, image, price, id }];
+    const { name, image, price, quantity } = this.state;
+    const produto = [{ name, image, price, quantity, id }];
     if (localStorage.getItem('Produto')) {
       const itemOnLocal = JSON.parse(localStorage.getItem('Produto'));
       localStorage.removeItem('Produto');
