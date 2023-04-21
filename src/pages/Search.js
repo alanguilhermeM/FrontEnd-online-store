@@ -10,10 +10,15 @@ class Search extends Component {
     resultSearch: [],
     clickIdProduct: '',
     redirect: false,
+    cartItems: JSON.parse(localStorage.getItem('Produto')) || [],
   };
 
   componentDidMount() {
     this.fetchGetCategories();
+    const cartItems = JSON.parse(localStorage.getItem('Produto'));
+    if (cartItems) {
+      this.setState({ cartItems });
+    }
   }
 
   fetchGetCategories = async () => {
@@ -57,9 +62,34 @@ class Search extends Component {
     });
   };
 
+  handleAddToCart = (event, product) => {
+    event.preventDefault();
+    const { title, thumbnail, price, id } = product;
+    const produto = [{
+      name: title,
+      image: thumbnail,
+      price,
+      quantity: 1,
+      id,
+    }];
+    if (localStorage.getItem('Produto')) {
+      const itemOnLocal = JSON.parse(localStorage.getItem('Produto'));
+      localStorage.removeItem('Produto');
+      const newProduct = produto[0];
+      itemOnLocal.push(newProduct);
+      localStorage.setItem('Produto', JSON.stringify(itemOnLocal));
+
+      this.setState({ cartItems: JSON.parse(localStorage.getItem('Produto')) });
+    } else {
+      localStorage.setItem('Produto', JSON.stringify(produto));
+      this.setState({ cartItems: JSON.parse(localStorage.getItem('Produto')) });
+    }
+  };
+
   render() {
     const {
-      inputSearch, categorieSearch, categories, resultSearch, clickIdProduct, redirect,
+      inputSearch, categorieSearch, categories,
+      resultSearch, clickIdProduct, redirect, cartItems,
     } = this.state;
 
     if (redirect) return <Redirect to={ `/${clickIdProduct}` } />;
@@ -79,6 +109,7 @@ class Search extends Component {
         </button>
 
         <Link data-testid="shopping-cart-button" to="/cart">Carrinho</Link>
+        <span>{ cartItems.length }</span>
         { !inputSearch ? (
           <p data-testid="home-initial-message">
             Digite algum termo de pesquisa ou escolha uma categoria.
@@ -118,6 +149,13 @@ class Search extends Component {
                   <h3>{ result.title }</h3>
                   <img src={ result.thumbnail } alt="imagem do produto" />
                   <span>{ result.price }</span>
+                </button>
+                <button
+                  id={ result.id }
+                  onClick={ (event) => this.handleAddToCart(event, result) }
+                  data-testid="product-add-to-cart"
+                >
+                  Adicionar ao carrinho
                 </button>
               </div>
             )))}
