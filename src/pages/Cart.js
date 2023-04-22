@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CartCounter from '../components/CartCounter';
 
-export default class Cart extends Component {
+class Cart extends Component {
   state = {
     produtos: [],
   };
@@ -17,6 +18,7 @@ export default class Cart extends Component {
 
   removeProduct = (itemID) => {
     const { produtos } = this.state;
+    const { updatedQtnProductOnCart } = this.props;
     const indexProduct = produtos
       .findIndex((e) => e.id === itemID);
 
@@ -25,10 +27,13 @@ export default class Cart extends Component {
     this.setState({ produtos: updatedProducts });
     localStorage.removeItem('Produto');
     localStorage.setItem('Produto', JSON.stringify(updatedProducts));
+    updatedQtnProductOnCart(updatedProducts);
   };
 
   render() {
     const { produtos } = this.state;
+    const { updatedQtnProductOnCart } = this.props;
+
     return (
       <section>
         {produtos.length === 0 ? (
@@ -45,6 +50,7 @@ export default class Cart extends Component {
                   itemID={ produto.id }
                   itemPrice={ produto.price }
                   removeProduct={ this.removeProduct }
+                  updatedQtnProductOnCart={ updatedQtnProductOnCart }
                 />
               </div>
             ))}
@@ -54,3 +60,9 @@ export default class Cart extends Component {
     );
   }
 }
+
+Cart.propTypes = {
+  updatedQtnProductOnCart: PropTypes.func.isRequired,
+};
+
+export default Cart;

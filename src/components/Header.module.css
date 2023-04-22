@@ -1,0 +1,17 @@
+.conatinerHeader {
+  align-items: center;
+  background-color: #121212;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+}
+
+.qtnCart {
+  bottom: 1.438rem;
+  color: white;
+  font-weight: 700;
+  position: relative;
+  right: 1.063rem;
+  z-index: 1;
+}

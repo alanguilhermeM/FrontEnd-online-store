@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 
-export default class CartCounter extends Component {
+class CartCounter extends Component {
   state = {
     counter: 1,
     totalValue: 0,
@@ -21,7 +21,7 @@ export default class CartCounter extends Component {
 
   removeItemAndUpdate = (product) => {
     const { productsLocalStorage } = this.state;
-    const { itemID } = this.props;
+    const { itemID, updatedQtnProductOnCart } = this.props;
     const indexProduct = productsLocalStorage
       .findIndex((e) => e.id === itemID);
 
@@ -30,6 +30,7 @@ export default class CartCounter extends Component {
     this.setState({ productsLocalStorage: updatedProducts });
     localStorage.removeItem('Produto');
     localStorage.setItem('Produto', JSON.stringify(updatedProducts));
+    updatedQtnProductOnCart(updatedProducts);
   };
 
   changeCounterUp = () => {
@@ -67,6 +68,7 @@ export default class CartCounter extends Component {
   render() {
     const { counter, totalValue } = this.state;
     const { itemID } = this.props;
+
     return (
       <section>
         <div data-testid="shopping-cart-empty-message">
@@ -102,7 +104,10 @@ export default class CartCounter extends Component {
   }
 }
 CartCounter.propTypes = {
-  itemPrice: proptypes.number.isRequired,
-  removeProduct: proptypes.func.isRequired,
-  itemID: proptypes.string.isRequired,
+  itemPrice: PropTypes.number.isRequired,
+  removeProduct: PropTypes.func.isRequired,
+  itemID: PropTypes.string.isRequired,
+  updatedQtnProductOnCart: PropTypes.func.isRequired,
 };
+
+export default CartCounter;
