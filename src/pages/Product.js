@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
 import Loading from '../components/Loading';
 import InputCheckbox from '../components/InputCheckbox';
@@ -144,7 +143,6 @@ class Product extends Component {
               />
               <span data-testid="product-detail-price">{price}</span>
               <br />
-              <Link data-testid="shopping-cart-button" to="/cart">Carrinho</Link>
               <button
                 data-testid="product-detail-add-to-cart"
                 onClick={ this.addProduct }

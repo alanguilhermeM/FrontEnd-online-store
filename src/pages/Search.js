@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 class Search extends Component {
@@ -64,6 +65,7 @@ class Search extends Component {
 
   handleAddToCart = (event, product) => {
     event.preventDefault();
+    const { updatedQtnProductOnCart } = this.props;
     const { title, thumbnail, price, id } = product;
     const produto = [{
       name: title,
@@ -79,17 +81,27 @@ class Search extends Component {
       itemOnLocal.push(newProduct);
       localStorage.setItem('Produto', JSON.stringify(itemOnLocal));
 
-      this.setState({ cartItems: JSON.parse(localStorage.getItem('Produto')) });
+      this.setState({
+        cartItems: JSON.parse(localStorage.getItem('Produto')),
+      }, () => {
+        const { cartItems } = this.state;
+        updatedQtnProductOnCart(cartItems);
+      });
     } else {
       localStorage.setItem('Produto', JSON.stringify(produto));
-      this.setState({ cartItems: JSON.parse(localStorage.getItem('Produto')) });
+      this.setState({
+        cartItems: JSON.parse(localStorage.getItem('Produto')),
+      }, () => {
+        const { cartItems } = this.state;
+        updatedQtnProductOnCart(cartItems);
+      });
     }
   };
 
   render() {
     const {
       inputSearch, categorieSearch, categories,
-      resultSearch, clickIdProduct, redirect, cartItems,
+      resultSearch, clickIdProduct, redirect,
     } = this.state;
 
     if (redirect) return <Redirect to={ `/${clickIdProduct}` } />;
@@ -108,8 +120,6 @@ class Search extends Component {
           Buscar
         </button>
 
-        <Link data-testid="shopping-cart-button" to="/cart">Carrinho</Link>
-        <span>{ cartItems.length }</span>
         { !inputSearch ? (
           <p data-testid="home-initial-message">
             Digite algum termo de pesquisa ou escolha uma categoria.
@@ -164,5 +174,9 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  updatedQtnProductOnCart: PropTypes.func.isRequired,
+};
 
 export default Search;
