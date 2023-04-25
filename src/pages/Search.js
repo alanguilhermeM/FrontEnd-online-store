@@ -73,6 +73,7 @@ class Search extends Component {
       price,
       quantity: 1,
       id,
+      availableQuantity: product.available_quantity,
     }];
     if (localStorage.getItem('Produto')) {
       const itemOnLocal = JSON.parse(localStorage.getItem('Produto'));
