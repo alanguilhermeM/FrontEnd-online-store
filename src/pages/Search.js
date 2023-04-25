@@ -159,6 +159,8 @@ class Search extends Component {
                   <h3>{ result.title }</h3>
                   <img src={ result.thumbnail } alt="imagem do produto" />
                   <span>{ result.price }</span>
+                  {result.shipping.free_shipping === true ? (
+                    <h4 data-testid="free-shipping">*Frete Grátis</h4>) : null}
                 </button>
                 <button
                   id={ result.id }

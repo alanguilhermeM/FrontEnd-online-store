@@ -22,6 +22,7 @@ class Product extends Component {
     rating5: false,
     checkedFields: false,
     errorMessage: false,
+    freeShipping: false,
   };
 
   async componentDidMount() {
@@ -32,12 +33,14 @@ class Product extends Component {
     const { match } = this.props;
     const { params: { id } } = match;
     const data = await getProductById(id);
+    console.log(data.shipping.free_shipping);
 
     this.setState({
       name: data.title,
       image: data.thumbnail,
       price: data.price,
       loading: false,
+      freeShipping: data.shipping.free_shipping,
     });
   };
 
@@ -125,7 +128,7 @@ class Product extends Component {
   render() {
     const {
       loading, name, image, price, email, text,
-      rating1, rating2, rating3, rating4, rating5, errorMessage,
+      rating1, rating2, rating3, rating4, rating5, errorMessage, freeShipping,
     } = this.state;
     const { match } = this.props;
     const { params: { id } } = match;
@@ -150,6 +153,7 @@ class Product extends Component {
                 Adicione ao Carrinho
 
               </button>
+              { freeShipping === true ? <p>Frete Grátis</p> : null }
             </section>
 
             <form>
