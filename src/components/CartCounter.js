@@ -36,13 +36,15 @@ class CartCounter extends Component {
   changeCounterUp = () => {
     const { itemPrice, itemID } = this.props;
     const { counter, productsLocalStorage } = this.state;
-    this.setState((previousCounter) => ({
-      counter: previousCounter.counter + 1,
-      totalValue: (counter + 1) * itemPrice,
-    }));
-    const product = productsLocalStorage.find((element) => element.id === itemID);
-    product.quantity = counter + 1;
-    this.removeItemAndUpdate(product);
+    if (counter + 1 <= productsLocalStorage[0].availableQuantity) {
+      this.setState((previousCounter) => ({
+        counter: previousCounter.counter + 1,
+        totalValue: (counter + 1) * itemPrice,
+      }));
+      const product = productsLocalStorage.find((element) => element.id === itemID);
+      product.quantity = counter + 1;
+      this.removeItemAndUpdate(product);
+    }
   };
 
   changeCounterDown = () => {

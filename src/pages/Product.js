@@ -12,6 +12,7 @@ class Product extends Component {
     image: '',
     price: 0,
     quantity: 1,
+    availableQuantity: 0,
     email: '',
     text: '',
     rating: '',
@@ -40,6 +41,7 @@ class Product extends Component {
       image: data.thumbnail,
       price: data.price,
       loading: false,
+      availableQuantity: data.available_quantity,
       freeShipping: data.shipping.free_shipping,
     });
   };
@@ -48,8 +50,8 @@ class Product extends Component {
     event.preventDefault();
     const { match } = this.props;
     const { params: { id } } = match;
-    const { name, image, price, quantity } = this.state;
-    const produto = [{ name, image, price, quantity, id }];
+    const { name, image, price, quantity, availableQuantity } = this.state;
+    const produto = [{ name, image, price, quantity, id, availableQuantity }];
     if (localStorage.getItem('Produto')) {
       const itemOnLocal = JSON.parse(localStorage.getItem('Produto'));
       localStorage.removeItem('Produto');
