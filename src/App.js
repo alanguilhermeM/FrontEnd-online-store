@@ -5,6 +5,7 @@ import Search from './pages/Search';
 import Cart from './pages/Cart';
 import Product from './pages/Product';
 import Header from './components/Header';
+import Checkout from './pages/Checkout';
 
 class App extends Component {
   state = {
@@ -22,6 +23,7 @@ class App extends Component {
       <div className="App">
         <Header cartItems={ cartItems } />
         <Switch>
+          <Route path="/checkout" component={ Checkout } />
           <Route
             path="/cart"
             render={
